@@ -1,5 +1,3 @@
-'use client'
-
 import { Task, ParsedTask } from './types'
 
 const TASKS_KEY = '23_tasks'
