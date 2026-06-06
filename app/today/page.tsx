@@ -20,8 +20,11 @@ function formatDate(iso: string) {
 export default function TodayPage() {
   const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
+  const [name, setName]   = useState('')
 
   useEffect(() => {
+    setName(localStorage.getItem('23_name') || '')
+
     const all = getTasks().filter(
       t => t.scheduled_date === TODAY && (t.status === 'today' || t.status === 'done')
     )
@@ -55,7 +58,7 @@ export default function TodayPage() {
           {formatDate(TODAY)}
         </p>
         <h1 className="font-serif text-3xl font-bold text-gray-900 leading-tight">
-          Твій день.
+          {name ? `Твій день, ${name}.` : 'Твій день.'}
         </h1>
       </div>
 

@@ -12,6 +12,13 @@ export default function CapturePage() {
   const [text, setText]       = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState<string | null>(null)
+  const [name, setName]       = useState('')
+
+  useEffect(() => {
+    const n = localStorage.getItem('23_name')
+    if (!n) { router.replace('/onboarding'); return }
+    setName(n)
+  }, [router])
 
   const { transcript, isListening, isSupported, start, stop, reset } =
     useSpeechRecognition('uk-UA')
@@ -59,7 +66,9 @@ export default function CapturePage() {
   return (
     <div className="screen bg-accent px-6 py-10">
       <div className="mb-8">
-        <p className="text-white/50 text-xs tracking-widest uppercase mb-1">23</p>
+        <p className="text-white/50 text-xs tracking-widest uppercase mb-1">
+          {name ? `привіт, ${name}` : '23'}
+        </p>
         <h1 className="font-serif text-4xl font-bold text-white leading-tight">
           Що зараз<br />крутиться<br />в голові?
         </h1>
