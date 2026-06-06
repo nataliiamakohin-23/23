@@ -7,10 +7,11 @@ interface TaskCheckboxProps {
 
 export function TaskCheckbox({ task, onToggle }: TaskCheckboxProps) {
   const done = task.status === 'done'
+  const dimmed = task.priority === 'nice' && !done
 
   return (
     <div
-      className="flex items-start gap-3 py-3.5 border-b border-gray-50 last:border-none cursor-pointer"
+      className={`flex items-start gap-3 py-3.5 border-b border-gray-50 last:border-none cursor-pointer transition-opacity ${dimmed ? 'opacity-50' : 'opacity-100'}`}
       onClick={() => onToggle(task.id, !done)}
     >
       <div
@@ -32,14 +33,16 @@ export function TaskCheckbox({ task, onToggle }: TaskCheckboxProps) {
         <p className={`text-sm font-medium leading-snug ${done ? 'line-through text-gray-300' : 'text-gray-900'}`}>
           {task.title}
         </p>
-        {task.duration_min && (
-          <p className={`text-xs mt-0.5 ${done ? 'text-gray-200' : 'text-gray-400'}`}>
-            {task.duration_min} хв
-            {task.priority === 'must' && !done && (
-              <span className="ml-2 text-accent font-medium">must</span>
-            )}
-          </p>
-        )}
+        <div className="flex items-center gap-2 mt-0.5">
+          {task.duration_min && (
+            <p className={`text-xs ${done ? 'text-gray-200' : 'text-gray-400'}`}>
+              {task.duration_min} хв
+            </p>
+          )}
+          {task.priority === 'must' && !done && (
+            <span className="text-xs text-accent font-semibold">must</span>
+          )}
+        </div>
       </div>
     </div>
   )
