@@ -9,6 +9,7 @@ import { Task } from '@/lib/types'
 
 const TODAY = new Date().toISOString().split('T')[0]
 const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
+const logo = { ...serif, color: '#F04E23', fontSize: '1.75rem', fontWeight: 700, lineHeight: 1 }
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long' })
@@ -48,7 +49,7 @@ export default function TodayPage() {
   return (
     <div className="screen bg-white px-8 py-14">
       <div className="flex items-center justify-between mb-10">
-        <p style={{ ...serif, color: '#F04E23', fontSize: '0.875rem', fontWeight: 700 }}>23</p>
+        <p style={logo}>23</p>
         <button className="text-gray-300 text-xs" onClick={() => router.push('/capture')}>
           + новий dump
         </button>

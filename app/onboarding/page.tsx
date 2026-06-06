@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
+const logo = { ...serif, color: '#F04E23', fontSize: '1.75rem', fontWeight: 700, lineHeight: 1 }
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -18,7 +19,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="screen bg-white px-8 py-14 justify-between">
-      <p style={serif} className="text-[#F04E23] text-sm font-bold">23</p>
+      <p style={logo}>23</p>
 
       <div className="flex-1 flex flex-col justify-center">
         <h1 style={serif} className="text-5xl font-bold text-gray-900 leading-tight mb-16">

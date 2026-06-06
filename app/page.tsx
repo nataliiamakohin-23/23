@@ -8,7 +8,7 @@ export default function RootPage() {
 
   useEffect(() => {
     const name = localStorage.getItem('23_name')
-    router.replace(name ? '/today' : '/onboarding')
+    router.replace(name ? '/today' : '/intro')
   }, [router])
 
   return null

@@ -8,6 +8,7 @@ import { Task } from '@/lib/types'
 
 const TODAY = new Date().toISOString().split('T')[0]
 const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
+const logo = { ...serif, color: '#F04E23', fontSize: '1.75rem', fontWeight: 700, lineHeight: 1 }
 
 export default function InboxPage() {
   const router = useRouter()
@@ -37,7 +38,7 @@ export default function InboxPage() {
     <div className="screen bg-white px-8 py-14">
       <div className="flex items-start justify-between mb-10">
         <div>
-          <p style={{ ...serif, color: '#F04E23', fontSize: '0.875rem', fontWeight: 700, marginBottom: '0.75rem' }}>23</p>
+          <p style={logo} className="mb-4">23</p>
           <h1 style={serif} className="text-4xl font-bold text-gray-900 leading-tight">
             {tasks.length === 0
               ? 'Усе розібрано.'

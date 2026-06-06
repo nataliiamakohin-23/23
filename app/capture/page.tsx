@@ -8,7 +8,7 @@ import { addTasks } from '@/lib/storage'
 import { ParsedTask } from '@/lib/types'
 
 const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
-const ORANGE = '#F04E23'
+const logo = { ...serif, color: 'white', fontSize: '1.75rem', fontWeight: 700, lineHeight: 1 }
 
 export default function CapturePage() {
   const router = useRouter()
@@ -59,53 +59,42 @@ export default function CapturePage() {
   }
 
   return (
-    <div className="screen px-8 py-14 justify-between" style={{ backgroundColor: ORANGE }}>
-      {/* Header */}
+    <div className="screen px-8 py-14 justify-between" style={{ backgroundColor: '#F04E23' }}>
       <div className="flex items-center justify-between">
-        <p style={serif} className="text-white text-sm font-bold">23</p>
+        <p style={logo}>23</p>
         <span className="text-white/50 text-xs cursor-pointer" onClick={() => router.push('/today')}>
           сьогодні →
         </span>
       </div>
 
-      {/* Headline */}
       <div className="flex-1 flex flex-col justify-center py-8">
         <h1 style={serif} className="text-5xl font-bold text-white leading-tight mb-4">
           {name ? `${name},` : 'Що зараз'}<br />
-          {name ? 'що в голові?' : 'крутиться'}<br />
-          {!name && 'в голові?'}
+          {name ? 'що в голові?' : 'крутиться'}{!name && <><br />в голові?</>}
         </h1>
         <p className="text-white/50 text-sm mt-3">
           Говори або пиши — AI розбере сам.
         </p>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
         <div className="flex justify-center">
-          <MicButton
-            isListening={isListening}
-            isSupported={isSupported}
-            onStart={handleToggleMic}
-            onStop={handleToggleMic}
-          />
+          <MicButton isListening={isListening} isSupported={isSupported} onStart={handleToggleMic} onStop={handleToggleMic} />
         </div>
-
         {isListening && (
           <p className="text-white/60 text-xs text-center -mt-4 animate-pulse">Слухаю…</p>
         )}
-
         <textarea
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder="або введи текст тут…"
           rows={4}
-          className="bg-transparent border-b-2 border-white/40 text-white text-base outline-none resize-none py-2 placeholder:text-white/30 focus:border-white/80"
+          className="bg-transparent border-b-2 border-white/40 text-white text-base outline-none resize-none py-2 placeholder:text-white/30"
           style={{ transition: 'border-color 0.2s' }}
+          onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.8)'}
+          onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.4)'}
         />
-
         {error && <p className="text-white/60 text-xs">{error}</p>}
-
         <button
           type="submit"
           disabled={loading || !text.trim()}
