@@ -8,26 +8,21 @@ interface MicButtonProps {
 export function MicButton({ isListening, isSupported, onStart, onStop }: MicButtonProps) {
   if (!isSupported) {
     return (
-      <div className="relative flex items-center justify-center" title="Твій браузер не підтримує голосовий ввід. Використай текстове поле.">
+      <div className="relative flex flex-col items-center gap-2">
         <button
           type="button"
           disabled
-          aria-label="Голосовий ввід недоступний у цьому браузері"
-          className="w-14 h-14 rounded-full flex items-center justify-center bg-white/40 cursor-not-allowed"
+          style={{ width: 56, height: 56, borderRadius: '50%', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'not-allowed' }}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-            stroke="#F04E23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            opacity="0.4">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F04E23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.4">
             <rect x="9" y="2" width="6" height="12" rx="3" />
             <path d="M5 10a7 7 0 0 0 14 0" />
             <line x1="12" y1="19" x2="12" y2="22" />
             <line x1="9" y1="22" x2="15" y2="22" />
-            <line x1="2" y1="2" x2="22" y2="22" stroke="#F04E23" />
+            <line x1="2" y1="2" x2="22" y2="22" />
           </svg>
         </button>
-        <p className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-xs whitespace-nowrap">
-          браузер не підтримує
-        </p>
+        <p className="text-gray-300 text-xs">браузер не підтримує</p>
       </div>
     )
   }
@@ -36,25 +31,35 @@ export function MicButton({ isListening, isSupported, onStart, onStop }: MicButt
     <div className="relative flex items-center justify-center">
       {isListening && (
         <>
-          <span className="absolute inline-flex h-14 w-14 rounded-full bg-white/30 animate-pulse_ring" />
-          <span className="absolute inline-flex h-14 w-14 rounded-full bg-white/20 animate-pulse_ring [animation-delay:0.4s]" />
+          <span style={{
+            position: 'absolute', width: 56, height: 56, borderRadius: '50%',
+            backgroundColor: '#F04E23', opacity: 0.15,
+            animation: 'pulse_ring 1.2s ease-out infinite',
+          }} />
+          <span style={{
+            position: 'absolute', width: 56, height: 56, borderRadius: '50%',
+            backgroundColor: '#F04E23', opacity: 0.1,
+            animation: 'pulse_ring 1.2s ease-out 0.4s infinite',
+          }} />
         </>
       )}
       <button
         type="button"
         onClick={isListening ? onStop : onStart}
         aria-label={isListening ? 'Зупинити запис' : 'Почати запис голосу'}
-        className={`
-          relative z-10 w-14 h-14 rounded-full flex items-center justify-center
-          transition-colors duration-200
-          ${isListening ? 'bg-white shadow-lg' : 'bg-white/90 hover:bg-white'}
-        `}
+        style={{
+          position: 'relative', zIndex: 10,
+          width: 56, height: 56, borderRadius: '50%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          backgroundColor: isListening ? '#F04E23' : '#fff0ee',
+          border: `2px solid #F04E23`,
+          transition: 'all 0.2s',
+        }}
       >
         {isListening ? (
-          <span className="w-4 h-4 rounded-sm bg-accent block" />
+          <span style={{ width: 14, height: 14, borderRadius: 3, backgroundColor: 'white', display: 'block' }} />
         ) : (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-            stroke="#F04E23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F04E23" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="9" y="2" width="6" height="12" rx="3" />
             <path d="M5 10a7 7 0 0 0 14 0" />
             <line x1="12" y1="19" x2="12" y2="22" />

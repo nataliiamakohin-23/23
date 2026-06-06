@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
-const logo = { ...serif, color: '#F04E23', fontSize: '1.75rem', fontWeight: 700, lineHeight: 1 }
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -19,7 +18,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="screen bg-white px-8 py-14 justify-between">
-      <p style={logo}>23</p>
+      <p style={{ ...serif, color: '#F04E23', fontSize: '1.75rem', fontWeight: 700, lineHeight: 1 }}>23</p>
 
       <div className="flex-1 flex flex-col justify-center">
         <h1 style={serif} className="text-5xl font-bold text-gray-900 leading-tight mb-16">
@@ -34,6 +33,7 @@ export default function OnboardingPage() {
             onChange={e => setName(e.target.value)}
             required
             autoFocus
+            style={serif}
             className="bg-transparent border-b-2 border-gray-900 text-gray-900 text-xl outline-none py-2 placeholder:text-gray-300"
           />
           <button
@@ -42,12 +42,12 @@ export default function OnboardingPage() {
             style={serif}
             className="self-start text-xl font-bold text-gray-900 disabled:opacity-30"
           >
-            Поїхали →
+            Поїхали! →
           </button>
         </form>
       </div>
 
-      <p className="text-gray-300 text-xs">Планувальник дня на базі AI</p>
+      <div />
     </div>
   )
 }
