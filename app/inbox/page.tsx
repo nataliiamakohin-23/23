@@ -13,7 +13,10 @@ export default function InboxPage() {
   const [tasks, setTasks] = useState<Task[]>([])
 
   useEffect(() => {
-    setTasks(getTasks().filter(t => t.status === 'inbox'))
+    const all = getTasks().filter(t => t.status === 'inbox')
+    const must = all.filter(t => t.priority === 'must')
+    const nice = all.filter(t => t.priority === 'nice')
+    setTasks([...must, ...nice])
   }, [])
 
   function handleToday(id: string) {
@@ -31,46 +34,37 @@ export default function InboxPage() {
     setTasks(prev => prev.filter(t => t.id !== id))
   }
 
-  const mustTasks = tasks.filter(t => t.priority === 'must')
-  const niceTasks = tasks.filter(t => t.priority === 'nice')
-
   return (
-    <div className="screen bg-white px-5 py-10">
-      <div className="flex items-start justify-between mb-7">
+    <div className="screen bg-white px-8 py-14">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-10">
         <div>
-          <h1 className="font-serif text-3xl font-bold text-gray-900 leading-tight">
-            AI розібрав<br />
-            {`${tasks.length} задач${tasks.length === 1 ? 'у' : 'и'}`}
+          <p className="font-serif text-accent text-sm font-bold mb-3">23</p>
+          <h1 className="font-serif text-4xl font-bold text-gray-900 leading-tight">
+            {tasks.length === 0
+              ? 'Усе\nрозібрано.'
+              : `AI знайшов\n${tasks.length} задач${tasks.length === 1 ? 'у' : 'и'}.`}
           </h1>
         </div>
-        <span className="bg-accent text-white text-xs font-semibold px-2.5 py-1 rounded-full mt-1">
+        <span className="text-accent text-xs font-bold mt-1 bg-accent/10 px-2 py-1 rounded-full">
           AI ✦
         </span>
       </div>
 
       {tasks.length === 0 ? (
-        <div className="text-center mt-16">
-          <p className="text-gray-400 text-sm mb-4">Inbox порожній 🎉</p>
+        <div className="flex-1 flex flex-col justify-center">
+          <p className="text-gray-300 text-sm mb-12">Inbox порожній.</p>
           <button
             onClick={() => router.push('/today')}
-            className="bg-accent text-white text-sm font-semibold px-6 py-3 rounded-full"
+            className="self-start font-serif text-xl font-bold text-gray-900"
           >
             До сьогодні →
           </button>
         </div>
       ) : (
         <>
-          <div className="flex flex-col gap-3">
-            {mustTasks.map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onToday={handleToday}
-                onLater={handleLater}
-                onDelete={handleDelete}
-              />
-            ))}
-            {niceTasks.map(task => (
+          <div className="flex-1">
+            {tasks.map(task => (
               <TaskCard
                 key={task.id}
                 task={task}
@@ -83,9 +77,9 @@ export default function InboxPage() {
 
           <button
             onClick={() => router.push('/today')}
-            className="mt-6 text-accent text-sm font-semibold text-center w-full"
+            className="mt-10 font-serif text-xl font-bold text-accent"
           >
-            Перейти до сьогодні →
+            До сьогодні →
           </button>
         </>
       )}

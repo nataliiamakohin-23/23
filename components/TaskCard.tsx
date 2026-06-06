@@ -9,48 +9,50 @@ interface TaskCardProps {
 
 export function TaskCard({ task, onToday, onLater, onDelete }: TaskCardProps) {
   return (
-    <div className="border border-gray-100 rounded-2xl p-4">
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <p className="text-sm font-medium text-gray-900 leading-snug flex-1">
+    <div className="py-6 border-b border-gray-100 last:border-none">
+      <div className="flex items-start justify-between gap-4 mb-3">
+        <h2 className="font-serif text-xl font-bold text-gray-900 leading-snug flex-1">
           {task.title}
-        </p>
+        </h2>
         <span
           className={`
-            text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5
+            text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0 mt-1
             ${task.priority === 'must'
               ? 'bg-accent text-white'
-              : 'bg-gray-100 text-gray-500'}
+              : 'bg-gray-100 text-gray-400'}
           `}
         >
           {task.priority}
         </span>
       </div>
 
-      <div className="flex gap-4 text-xs text-gray-400 mb-3">
+      <div className="flex gap-5 text-xs text-gray-400 mb-5">
         {task.duration_min && <span>{task.duration_min} хв</span>}
         {task.deadline && (
-          <span>{new Date(task.deadline).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' })}</span>
+          <span>
+            до {new Date(task.deadline).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' })}
+          </span>
         )}
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-6 text-sm font-semibold">
         <button
           onClick={() => onToday(task.id)}
-          className="bg-accent text-white text-xs font-semibold px-3 py-1.5 rounded-full"
+          className="text-accent"
         >
           + на сьогодні
         </button>
         <button
           onClick={() => onLater(task.id)}
-          className="border border-gray-200 text-gray-500 text-xs px-3 py-1.5 rounded-full"
+          className="text-gray-400"
         >
           пізніше
         </button>
         <button
           onClick={() => onDelete(task.id)}
-          className="border border-gray-200 text-gray-500 text-xs px-3 py-1.5 rounded-full"
+          className="text-gray-300"
         >
-          ✕
+          видалити
         </button>
       </div>
     </div>

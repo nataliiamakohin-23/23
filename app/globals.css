@@ -12,3 +12,18 @@ html, body {
   display: flex;
   flex-direction: column;
 }
+
+.input-line {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid currentColor;
+  border-radius: 0;
+  outline: none;
+  width: 100%;
+  padding: 8px 0;
+  font-size: 1.125rem;
+}
+
+.input-line::placeholder {
+  opacity: 0.35;
+}

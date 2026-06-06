@@ -43,43 +43,59 @@ export default function TodayPage() {
       ? { status: 'done' as const, completed_at: new Date().toISOString() }
       : { status: 'today' as const, completed_at: null }
     updateTask(id, updates)
-    setTasks(prev => prev.map(t =>
-      t.id === id ? { ...t, ...updates } : t
-    ))
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t))
   }
 
   const completed = tasks.filter(t => t.status === 'done').length
   const total = tasks.length
 
   return (
-    <div className="screen bg-white px-5 py-10">
-      <div className="mb-6">
-        <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">
+    <div className="screen bg-white px-8 py-14">
+      {/* Logo + nav */}
+      <div className="flex items-center justify-between mb-10">
+        <p className="font-serif text-accent text-sm font-bold">23</p>
+        <button
+          onClick={() => router.push('/capture')}
+          className="text-gray-300 text-xs"
+        >
+          + новий dump
+        </button>
+      </div>
+
+      {/* Greeting */}
+      <div className="mb-8">
+        <p className="text-gray-400 text-xs uppercase tracking-widest mb-2">
           {formatDate(TODAY)}
         </p>
-        <h1 className="font-serif text-3xl font-bold text-gray-900 leading-tight">
-          {name ? `Твій день, ${name}.` : 'Твій день.'}
+        <h1 className="font-serif text-4xl font-bold text-gray-900 leading-tight">
+          {name ? `Твій день,\n${name}.` : 'Твій день.'}
         </h1>
       </div>
 
-      <ProgressBar completed={completed} total={total} />
-      <p className="text-xs text-gray-400 mt-1 mb-6">
-        {completed} з {total} виконано
-      </p>
+      {/* Progress */}
+      {total > 0 && (
+        <div className="mb-8">
+          <ProgressBar completed={completed} total={total} />
+          <p className="text-xs text-gray-300 mt-2">
+            {completed} з {total} виконано
+          </p>
+        </div>
+      )}
 
+      {/* Tasks */}
       {tasks.length === 0 ? (
-        <div className="text-center mt-16">
-          <p className="text-gray-400 text-sm mb-4">Список порожній. Що в голові?</p>
+        <div className="flex-1 flex flex-col justify-center">
+          <p className="text-gray-300 text-sm mb-12">Список порожній.</p>
           <button
             onClick={() => router.push('/capture')}
-            className="bg-accent text-white text-sm font-semibold px-6 py-3 rounded-full"
+            className="self-start font-serif text-xl font-bold text-gray-900"
           >
             Brain dump →
           </button>
         </div>
       ) : (
         <>
-          <div className="mb-6">
+          <div className="flex-1">
             {tasks.map(task => (
               <TaskCheckbox key={task.id} task={task} onToggle={handleToggle} />
             ))}
@@ -87,7 +103,7 @@ export default function TodayPage() {
 
           <button
             onClick={() => router.push('/capture')}
-            className="w-full border border-dashed border-gray-200 rounded-2xl py-3 text-gray-400 text-sm text-center"
+            className="mt-10 text-gray-300 text-sm border-b border-gray-200 pb-0.5"
           >
             + додати задачу
           </button>

@@ -15,32 +15,45 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="screen bg-accent px-6 py-10 justify-center">
-      <div className="mb-10">
-        <p className="text-white/50 text-xs tracking-widest uppercase mb-1">23</p>
-        <h1 className="font-serif text-4xl font-bold text-white leading-tight">
-          Як тебе<br />звати?
-        </h1>
+    <div className="screen bg-white px-8 py-14 justify-between">
+      {/* Logo */}
+      <div>
+        <p className="font-serif text-accent text-sm font-bold leading-none tracking-tight">
+          23
+        </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          placeholder="ім'я"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          required
-          autoFocus
-          className="bg-white/15 border border-white/25 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm outline-none focus:border-white/60"
-        />
-        <button
-          type="submit"
-          disabled={!name.trim()}
-          className="bg-white text-accent font-semibold rounded-full py-3 text-sm mt-2 disabled:opacity-50"
-        >
-          Поїхали →
-        </button>
-      </form>
+      {/* Main content */}
+      <div className="flex-1 flex flex-col justify-center">
+        <h1 className="font-serif text-5xl font-bold text-gray-900 leading-tight mb-16">
+          Як тебе<br />звати?
+        </h1>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-12">
+          <input
+            type="text"
+            placeholder="твоє ім'я"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            required
+            autoFocus
+            className="input-line text-gray-900 text-xl placeholder-gray-300 border-gray-900"
+          />
+
+          <button
+            type="submit"
+            disabled={!name.trim()}
+            className="self-start font-serif text-xl font-bold text-gray-900 disabled:opacity-30 flex items-center gap-2"
+          >
+            Поїхали →
+          </button>
+        </form>
+      </div>
+
+      {/* Bottom */}
+      <p className="text-gray-300 text-xs">
+        Планувальник дня на базі AI
+      </p>
     </div>
   )
 }

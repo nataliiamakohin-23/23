@@ -28,13 +28,8 @@ export default function CapturePage() {
   }, [transcript])
 
   function handleToggleMic() {
-    if (isListening) {
-      stop()
-    } else {
-      reset()
-      setText('')
-      start()
-    }
+    if (isListening) { stop() }
+    else { reset(); setText(''); start() }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -53,7 +48,7 @@ export default function CapturePage() {
       const data = await res.json()
       setError(data.error === 'no_tasks_found'
         ? 'Не знайшов задач. Спробуй ще раз.'
-        : 'Щось пішло не так. Спробуй ще раз.')
+        : 'Щось пішло не так.')
       setLoading(false)
       return
     }
@@ -64,24 +59,32 @@ export default function CapturePage() {
   }
 
   return (
-    <div className="screen bg-accent px-6 py-12">
-      {/* Header */}
-      <div className="mb-6">
-        <p className="text-white/50 text-xs tracking-widest uppercase mb-2">
-          {name ? `привіт, ${name}` : '23'}
-        </p>
-        <h1 className="font-serif text-4xl font-bold text-white leading-tight">
-          Що зараз<br />крутиться<br />в голові?
-        </h1>
+    <div className="screen bg-accent px-8 py-14 justify-between">
+      {/* Logo */}
+      <div className="flex items-center justify-between">
+        <p className="font-serif text-white text-sm font-bold">23</p>
+        <span
+          className="text-white/50 text-xs cursor-pointer"
+          onClick={() => router.push('/today')}
+        >
+          сьогодні →
+        </span>
       </div>
 
-      <p className="text-white/60 text-sm mb-8">
-        Говори або пиши все підряд.<br />AI розбере сам.
-      </p>
+      {/* Headline */}
+      <div className="flex-1 flex flex-col justify-center">
+        <h1 className="font-serif text-5xl font-bold text-white leading-tight mb-4">
+          {name ? `${name},\nщо в голові?` : 'Що зараз\nкрутиться\nв голові?'}
+        </h1>
+        <p className="text-white/50 text-sm mt-2">
+          Говори або пиши — AI розбере сам.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5 flex-1">
-        {/* Mic button — centered */}
-        <div className="flex justify-center mb-2">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        {/* Mic */}
+        <div className="flex justify-center">
           <MicButton
             isListening={isListening}
             isSupported={isSupported}
@@ -91,40 +94,30 @@ export default function CapturePage() {
         </div>
 
         {isListening && (
-          <p className="text-white/60 text-xs text-center -mt-3 animate-pulse">
+          <p className="text-white/60 text-xs text-center -mt-4 animate-pulse">
             Слухаю…
           </p>
         )}
 
+        {/* Underline textarea */}
         <textarea
           value={text}
           onChange={e => setText(e.target.value)}
-          placeholder="або просто введи текст…"
-          rows={7}
-          className="
-            bg-white/12 border border-white/20 rounded-2xl
-            px-4 py-3 text-white placeholder-white/35 text-sm
-            outline-none focus:border-white/50 resize-none
-          "
+          placeholder="або введи текст тут…"
+          rows={4}
+          className="bg-transparent border-b-2 border-white/40 text-white placeholder-white/30 text-base outline-none resize-none focus:border-white/80 transition-colors py-2"
         />
 
-        {error && <p className="text-white/70 text-xs">{error}</p>}
+        {error && <p className="text-white/60 text-xs">{error}</p>}
 
         <button
           type="submit"
           disabled={loading || !text.trim()}
-          className="bg-white text-accent font-semibold rounded-full py-3.5 text-sm disabled:opacity-40 mt-auto"
+          className="self-start font-serif text-2xl font-bold text-white disabled:opacity-30"
         >
-          {loading ? 'Розбираємо...' : 'Розібрати →'}
+          {loading ? 'Розбираємо…' : 'Розібрати →'}
         </button>
       </form>
-
-      <p
-        className="text-white/40 text-xs text-center mt-5 cursor-pointer"
-        onClick={() => router.push('/today')}
-      >
-        до сьогоднішніх задач
-      </p>
     </div>
   )
 }
