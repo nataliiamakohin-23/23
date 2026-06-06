@@ -8,13 +8,10 @@ import { TaskCheckbox } from '@/components/TaskCheckbox'
 import { Task } from '@/lib/types'
 
 const TODAY = new Date().toISOString().split('T')[0]
+const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('uk-UA', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  })
+  return new Date(iso).toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
 export default function TodayPage() {
@@ -24,7 +21,6 @@ export default function TodayPage() {
 
   useEffect(() => {
     setName(localStorage.getItem('23_name') || '')
-
     const all = getTasks().filter(
       t => t.scheduled_date === TODAY && (t.status === 'today' || t.status === 'done')
     )
@@ -51,45 +47,33 @@ export default function TodayPage() {
 
   return (
     <div className="screen bg-white px-8 py-14">
-      {/* Logo + nav */}
       <div className="flex items-center justify-between mb-10">
-        <p className="font-serif text-accent text-sm font-bold">23</p>
-        <button
-          onClick={() => router.push('/capture')}
-          className="text-gray-300 text-xs"
-        >
+        <p style={{ ...serif, color: '#F04E23', fontSize: '0.875rem', fontWeight: 700 }}>23</p>
+        <button className="text-gray-300 text-xs" onClick={() => router.push('/capture')}>
           + новий dump
         </button>
       </div>
 
-      {/* Greeting */}
       <div className="mb-8">
-        <p className="text-gray-400 text-xs uppercase tracking-widest mb-2">
+        <p className="text-gray-400 text-xs uppercase tracking-widest mb-3">
           {formatDate(TODAY)}
         </p>
-        <h1 className="font-serif text-4xl font-bold text-gray-900 leading-tight">
+        <h1 style={serif} className="text-4xl font-bold text-gray-900 leading-tight">
           {name ? `Твій день,\n${name}.` : 'Твій день.'}
         </h1>
       </div>
 
-      {/* Progress */}
       {total > 0 && (
         <div className="mb-8">
           <ProgressBar completed={completed} total={total} />
-          <p className="text-xs text-gray-300 mt-2">
-            {completed} з {total} виконано
-          </p>
+          <p className="text-xs text-gray-300 mt-2">{completed} з {total} виконано</p>
         </div>
       )}
 
-      {/* Tasks */}
       {tasks.length === 0 ? (
         <div className="flex-1 flex flex-col justify-center">
           <p className="text-gray-300 text-sm mb-12">Список порожній.</p>
-          <button
-            onClick={() => router.push('/capture')}
-            className="self-start font-serif text-xl font-bold text-gray-900"
-          >
+          <button style={serif} className="self-start text-xl font-bold text-gray-900" onClick={() => router.push('/capture')}>
             Brain dump →
           </button>
         </div>
@@ -100,11 +84,7 @@ export default function TodayPage() {
               <TaskCheckbox key={task.id} task={task} onToggle={handleToggle} />
             ))}
           </div>
-
-          <button
-            onClick={() => router.push('/capture')}
-            className="mt-10 text-gray-300 text-sm border-b border-gray-200 pb-0.5"
-          >
+          <button className="mt-10 text-gray-300 text-sm border-b border-gray-200 pb-0.5" onClick={() => router.push('/capture')}>
             + додати задачу
           </button>
         </>

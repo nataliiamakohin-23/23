@@ -7,6 +7,7 @@ import { TaskCard } from '@/components/TaskCard'
 import { Task } from '@/lib/types'
 
 const TODAY = new Date().toISOString().split('T')[0]
+const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
 
 export default function InboxPage() {
   const router = useRouter()
@@ -14,9 +15,7 @@ export default function InboxPage() {
 
   useEffect(() => {
     const all = getTasks().filter(t => t.status === 'inbox')
-    const must = all.filter(t => t.priority === 'must')
-    const nice = all.filter(t => t.priority === 'nice')
-    setTasks([...must, ...nice])
+    setTasks([...all.filter(t => t.priority === 'must'), ...all.filter(t => t.priority === 'nice')])
   }, [])
 
   function handleToday(id: string) {
@@ -36,17 +35,16 @@ export default function InboxPage() {
 
   return (
     <div className="screen bg-white px-8 py-14">
-      {/* Header */}
       <div className="flex items-start justify-between mb-10">
         <div>
-          <p className="font-serif text-accent text-sm font-bold mb-3">23</p>
-          <h1 className="font-serif text-4xl font-bold text-gray-900 leading-tight">
+          <p style={{ ...serif, color: '#F04E23', fontSize: '0.875rem', fontWeight: 700, marginBottom: '0.75rem' }}>23</p>
+          <h1 style={serif} className="text-4xl font-bold text-gray-900 leading-tight">
             {tasks.length === 0
-              ? 'Усе\nрозібрано.'
-              : `AI знайшов\n${tasks.length} задач${tasks.length === 1 ? 'у' : 'и'}.`}
+              ? 'Усе розібрано.'
+              : <>AI знайшов<br />{tasks.length} задач{tasks.length === 1 ? 'у' : 'и'}.</>}
           </h1>
         </div>
-        <span className="text-accent text-xs font-bold mt-1 bg-accent/10 px-2 py-1 rounded-full">
+        <span style={{ backgroundColor: '#F04E2320', color: '#F04E23', fontSize: '0.75rem', fontWeight: 700, padding: '4px 10px', borderRadius: '999px' }}>
           AI ✦
         </span>
       </div>
@@ -54,10 +52,7 @@ export default function InboxPage() {
       {tasks.length === 0 ? (
         <div className="flex-1 flex flex-col justify-center">
           <p className="text-gray-300 text-sm mb-12">Inbox порожній.</p>
-          <button
-            onClick={() => router.push('/today')}
-            className="self-start font-serif text-xl font-bold text-gray-900"
-          >
+          <button style={serif} className="self-start text-xl font-bold text-gray-900" onClick={() => router.push('/today')}>
             До сьогодні →
           </button>
         </div>
@@ -65,20 +60,10 @@ export default function InboxPage() {
         <>
           <div className="flex-1">
             {tasks.map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onToday={handleToday}
-                onLater={handleLater}
-                onDelete={handleDelete}
-              />
+              <TaskCard key={task.id} task={task} onToday={handleToday} onLater={handleLater} onDelete={handleDelete} />
             ))}
           </div>
-
-          <button
-            onClick={() => router.push('/today')}
-            className="mt-10 font-serif text-xl font-bold text-accent"
-          >
+          <button style={{ ...serif, color: '#F04E23' }} className="mt-10 text-xl font-bold" onClick={() => router.push('/today')}>
             До сьогодні →
           </button>
         </>

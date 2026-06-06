@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+const serif = { fontFamily: 'var(--font-playfair), Georgia, serif' }
+
 export default function OnboardingPage() {
   const router = useRouter()
   const [name, setName] = useState('')
@@ -16,16 +18,10 @@ export default function OnboardingPage() {
 
   return (
     <div className="screen bg-white px-8 py-14 justify-between">
-      {/* Logo */}
-      <div>
-        <p className="font-serif text-accent text-sm font-bold leading-none tracking-tight">
-          23
-        </p>
-      </div>
+      <p style={serif} className="text-[#F04E23] text-sm font-bold">23</p>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col justify-center">
-        <h1 className="font-serif text-5xl font-bold text-gray-900 leading-tight mb-16">
+        <h1 style={serif} className="text-5xl font-bold text-gray-900 leading-tight mb-16">
           Як тебе<br />звати?
         </h1>
 
@@ -37,23 +33,20 @@ export default function OnboardingPage() {
             onChange={e => setName(e.target.value)}
             required
             autoFocus
-            className="input-line text-gray-900 text-xl placeholder-gray-300 border-gray-900"
+            className="bg-transparent border-b-2 border-gray-900 text-gray-900 text-xl outline-none py-2 placeholder:text-gray-300"
           />
-
           <button
             type="submit"
             disabled={!name.trim()}
-            className="self-start font-serif text-xl font-bold text-gray-900 disabled:opacity-30 flex items-center gap-2"
+            style={serif}
+            className="self-start text-xl font-bold text-gray-900 disabled:opacity-30"
           >
             Поїхали →
           </button>
         </form>
       </div>
 
-      {/* Bottom */}
-      <p className="text-gray-300 text-xs">
-        Планувальник дня на базі AI
-      </p>
+      <p className="text-gray-300 text-xs">Планувальник дня на базі AI</p>
     </div>
   )
 }
