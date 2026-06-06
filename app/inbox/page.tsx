@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { getTasks, updateTask, deleteTask } from '@/lib/storage'
 import { TaskCard } from '@/components/TaskCard'
 import { Task } from '@/lib/types'
 
@@ -10,40 +10,24 @@ const TODAY = new Date().toISOString().split('T')[0]
 
 export default function InboxPage() {
   const router = useRouter()
-  const [tasks, setTasks]     = useState<Task[]>([])
-  const [loading, setLoading] = useState(true)
+  const [tasks, setTasks] = useState<Task[]>([])
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase
-      .from('tasks')
-      .select('*')
-      .eq('status', 'inbox')
-      .order('created_at', { ascending: true })
-      .then(({ data }) => {
-        setTasks((data as Task[]) ?? [])
-        setLoading(false)
-      })
+    setTasks(getTasks().filter(t => t.status === 'inbox'))
   }, [])
 
-  async function handleToday(id: string) {
-    const supabase = createClient()
-    await supabase
-      .from('tasks')
-      .update({ status: 'today', scheduled_date: TODAY })
-      .eq('id', id)
+  function handleToday(id: string) {
+    updateTask(id, { status: 'today', scheduled_date: TODAY })
     setTasks(prev => prev.filter(t => t.id !== id))
   }
 
-  async function handleLater(id: string) {
-    const supabase = createClient()
-    await supabase.from('tasks').update({ status: 'later' }).eq('id', id)
+  function handleLater(id: string) {
+    updateTask(id, { status: 'later' })
     setTasks(prev => prev.filter(t => t.id !== id))
   }
 
-  async function handleDelete(id: string) {
-    const supabase = createClient()
-    await supabase.from('tasks').delete().eq('id', id)
+  function handleDelete(id: string) {
+    deleteTask(id)
     setTasks(prev => prev.filter(t => t.id !== id))
   }
 
@@ -56,7 +40,7 @@ export default function InboxPage() {
         <div>
           <h1 className="font-serif text-3xl font-bold text-gray-900 leading-tight">
             AI розібрав<br />
-            {loading ? '…' : `${tasks.length} задач${tasks.length === 1 ? 'у' : 'и'}`}
+            {`${tasks.length} задач${tasks.length === 1 ? 'у' : 'и'}`}
           </h1>
         </div>
         <span className="bg-accent text-white text-xs font-semibold px-2.5 py-1 rounded-full mt-1">
@@ -64,9 +48,7 @@ export default function InboxPage() {
         </span>
       </div>
 
-      {loading ? (
-        <p className="text-gray-400 text-sm">Завантажуємо…</p>
-      ) : tasks.length === 0 ? (
+      {tasks.length === 0 ? (
         <div className="text-center mt-16">
           <p className="text-gray-400 text-sm mb-4">Inbox порожній 🎉</p>
           <button
@@ -99,14 +81,12 @@ export default function InboxPage() {
             ))}
           </div>
 
-          {tasks.length > 0 && (
-            <button
-              onClick={() => router.push('/today')}
-              className="mt-6 text-accent text-sm font-semibold text-center w-full"
-            >
-              Перейти до сьогодні →
-            </button>
-          )}
+          <button
+            onClick={() => router.push('/today')}
+            className="mt-6 text-accent text-sm font-semibold text-center w-full"
+          >
+            Перейти до сьогодні →
+          </button>
         </>
       )}
     </div>

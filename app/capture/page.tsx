@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { MicButton } from '@/components/MicButton'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
-import { createClient } from '@/lib/supabase/client'
+import { addTasks } from '@/lib/storage'
+import { ParsedTask } from '@/lib/types'
 
 export default function CapturePage() {
   const router = useRouter()
   const [text, setText]       = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState<string | null>(null)
-  const [name, setName]       = useState('')
 
   const { transcript, isListening, isSupported, start, stop, reset } =
     useSpeechRecognition('uk-UA')
@@ -19,14 +19,6 @@ export default function CapturePage() {
   useEffect(() => {
     if (transcript) setText(transcript)
   }, [transcript])
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      const displayName = user?.user_metadata?.display_name
-      if (displayName) setName(displayName)
-    })
-  }, [])
 
   function handleToggleMic() {
     if (isListening) {
@@ -59,15 +51,15 @@ export default function CapturePage() {
       return
     }
 
+    const data = await res.json()
+    addTasks(data.tasks as ParsedTask[])
     router.push('/inbox')
   }
 
   return (
     <div className="screen bg-accent px-6 py-10">
       <div className="mb-8">
-        <p className="text-white/50 text-xs tracking-widest uppercase mb-1">
-          {name ? `привіт, ${name}` : '23'}
-        </p>
+        <p className="text-white/50 text-xs tracking-widest uppercase mb-1">23</p>
         <h1 className="font-serif text-4xl font-bold text-white leading-tight">
           Що зараз<br />крутиться<br />в голові?
         </h1>

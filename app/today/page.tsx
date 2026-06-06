@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { getTasks, updateTask } from '@/lib/storage'
 import { ProgressBar } from '@/components/ProgressBar'
 import { TaskCheckbox } from '@/components/TaskCheckbox'
 import { Task } from '@/lib/types'
@@ -19,59 +19,29 @@ function formatDate(iso: string) {
 
 export default function TodayPage() {
   const router = useRouter()
-  const [tasks, setTasks]     = useState<Task[]>([])
-  const [name, setName]       = useState('')
-  const [loading, setLoading] = useState(true)
+  const [tasks, setTasks] = useState<Task[]>([])
 
   useEffect(() => {
-    const supabase = createClient()
-
-    Promise.all([
-      supabase.auth.getUser(),
-      supabase
-        .from('tasks')
-        .select('*')
-        .eq('status', 'today')
-        .eq('scheduled_date', TODAY)
-        .order('priority', { ascending: true })
-        .order('created_at', { ascending: true }),
-      supabase
-        .from('tasks')
-        .select('*')
-        .eq('status', 'done')
-        .eq('scheduled_date', TODAY),
-    ]).then(([{ data: { user } }, { data: todayTasks }, { data: doneTasks }]) => {
-      const n = user?.user_metadata?.display_name
-      if (n) setName(n)
-
-      const allToday = [
-        ...((todayTasks as Task[]) ?? []),
-        ...((doneTasks as Task[]) ?? []),
-      ]
-      allToday.sort((a, b) => {
-        if (a.status === 'done' && b.status !== 'done') return 1
-        if (b.status === 'done' && a.status !== 'done') return -1
-        if (a.priority === 'must' && b.priority !== 'must') return -1
-        if (b.priority === 'must' && a.priority !== 'must') return 1
-        return 0
-      })
-      setTasks(allToday)
-      setLoading(false)
+    const all = getTasks().filter(
+      t => t.scheduled_date === TODAY && (t.status === 'today' || t.status === 'done')
+    )
+    all.sort((a, b) => {
+      if (a.status === 'done' && b.status !== 'done') return 1
+      if (b.status === 'done' && a.status !== 'done') return -1
+      if (a.priority === 'must' && b.priority !== 'must') return -1
+      if (b.priority === 'must' && a.priority !== 'must') return 1
+      return 0
     })
+    setTasks(all)
   }, [])
 
-  async function handleToggle(id: string, markDone: boolean) {
-    const supabase = createClient()
-    const update = markDone
+  function handleToggle(id: string, markDone: boolean) {
+    const updates = markDone
       ? { status: 'done' as const, completed_at: new Date().toISOString() }
       : { status: 'today' as const, completed_at: null }
-
-    await supabase.from('tasks').update(update).eq('id', id)
-
+    updateTask(id, updates)
     setTasks(prev => prev.map(t =>
-      t.id === id
-        ? { ...t, status: update.status, completed_at: update.completed_at ?? null }
-        : t
+      t.id === id ? { ...t, ...updates } : t
     ))
   }
 
@@ -85,7 +55,7 @@ export default function TodayPage() {
           {formatDate(TODAY)}
         </p>
         <h1 className="font-serif text-3xl font-bold text-gray-900 leading-tight">
-          {name ? `Твій день,\n${name}.` : 'Твій день.'}
+          Твій день.
         </h1>
       </div>
 
@@ -94,9 +64,7 @@ export default function TodayPage() {
         {completed} з {total} виконано
       </p>
 
-      {loading ? (
-        <p className="text-gray-400 text-sm">Завантажуємо…</p>
-      ) : tasks.length === 0 ? (
+      {tasks.length === 0 ? (
         <div className="text-center mt-16">
           <p className="text-gray-400 text-sm mb-4">Список порожній. Що в голові?</p>
           <button
